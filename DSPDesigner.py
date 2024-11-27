@@ -13,7 +13,6 @@ from kivy.core.window import Window
 from kivy.uix.slider import Slider
 
 from click_class import Click
-from asm_node_class import asm_node
 from config import *
 
 
@@ -42,27 +41,8 @@ class myMousePos():
         self.pos = [0,0]
 
 
-class FXCoreDesignerApp(App):
-    def build(self):
-
-        self.registers_used = {
-        "r1": 0,
-        "r3":  0,
-        "r4":  0,
-        "r5":  0,
-        "r6":  0,
-        "r7":  0,
-        "r8":  0,
-        "r9":  0,
-        "r10":  0,
-        "r11":  0,
-        "r12":  0,
-        "r13":  0,
-        "r14":  0,
-        # "r15":  0
-        }
-        self.block_latch = None
-        
+class DSPDesignerApp(App):
+    def build(self):        
         #self.isOverlay = 0
         Window.size = (SCREEN_WIDTH, SCREEN_HEIGHT)
         Window.bind(mouse_pos=self.on_mouse_pos)
@@ -74,193 +54,88 @@ class FXCoreDesignerApp(App):
 
         #--------------------------------IOdrop
         IOdrop = DropDown()
-        #
+        
         inBtn = Button(text ='Input', size_hint_y = None, height = BUTTON_HEIGHT)
-        inBtn.bind(on_release = lambda none: self.click.assign_block('Input',0,1))
+        inBtn.bind(on_release = lambda none: self.click.assign_block('Input',NO_INPUTS,ONE_OUTPUT,NO_PARAMETERS))
         IOdrop.add_widget(inBtn)
-        #
+        
         outBtn = Button(text ='Output', size_hint_y = None, height = BUTTON_HEIGHT)
-        outBtn.bind(on_release = lambda none: self.click.assign_block('Output',1))
+        outBtn.bind(on_release = lambda none: self.click.assign_block('Output', ONE_INPUT,NO_OUTPUTS,NO_PARAMETERS))
         IOdrop.add_widget(outBtn)            
-        #
-        userBtn = Button(text ='User', size_hint_y = None, height = BUTTON_HEIGHT)
-        userBtn.bind(on_release = lambda none: self.click.assign_block('User'))
-        IOdrop.add_widget(userBtn)
+        #--------------------------------Operations
+        OpsDrop = DropDown()
 
-        #--------------------------------FXdrop
-        FXdrop = DropDown()
-        # reverbBtn = Button(text ='Reverb', size_hint_y = None, height = BUTTON_HEIGHT)
-        # reverbBtn.bind(on_release = lambda none: self.click.assign_block('Reverb',1,1,6))
-        # FXdrop.add_widget(reverbBtn)
+        test1Btn = Button(text ='test 1 param', size_hint_y = None, height = BUTTON_HEIGHT)
+        test1Btn.bind(on_release = lambda none: self.click.assign_block('Output', TWO_INPUTS,TWO_OUTPUTS,ONE_PARAMETER))
+        OpsDrop.add_widget(test1Btn)
 
-        # Chorus
-        chorusBtn = Button(text ='Chorus', size_hint_y = None, height = BUTTON_HEIGHT)
-        chorusBtn.bind(on_release = lambda none: self.click.assign_block('Chorus',1,1,3,1))
-        FXdrop.add_widget(chorusBtn)
+        test2Btn = Button(text ='test 2 param', size_hint_y = None, height = BUTTON_HEIGHT)
+        test2Btn.bind(on_release = lambda none: self.click.assign_block('Output', TWO_INPUTS,TWO_OUTPUTS,TWO_PARAMETERS))
+        OpsDrop.add_widget(test2Btn)
 
-        # Flanger
-        flangerBtn = Button(text ='Flanger', size_hint_y = None, height = BUTTON_HEIGHT)
-        flangerBtn.bind(on_release = lambda none: self.click.assign_block('Flanger',1,1,4,0,0,1))
-        FXdrop.add_widget(flangerBtn)
+        test3Btn = Button(text ='test 3 param', size_hint_y = None, height = BUTTON_HEIGHT)
+        test3Btn.bind(on_release = lambda none: self.click.assign_block('Output', TWO_INPUTS,TWO_OUTPUTS,THREE_PARAMETERS))
+        OpsDrop.add_widget(test3Btn)
+
+        test4Btn = Button(text ='test 4 param', size_hint_y = None, height = BUTTON_HEIGHT)
+        test4Btn.bind(on_release = lambda none: self.click.assign_block('Output', TWO_INPUTS,TWO_OUTPUTS,FOUR_PARAMETERS))
+        OpsDrop.add_widget(test4Btn)
+
+        test5Btn = Button(text ='test 5 param', size_hint_y = None, height = BUTTON_HEIGHT)
+        test5Btn.bind(on_release = lambda none: self.click.assign_block('Output', TWO_INPUTS,TWO_OUTPUTS,FIVE_PARAMETERS))
+        OpsDrop.add_widget(test5Btn)
+
+        test6Btn = Button(text ='test 6 param', size_hint_y = None, height = BUTTON_HEIGHT)
+        test6Btn.bind(on_release = lambda none: self.click.assign_block('Output', TWO_INPUTS,TWO_OUTPUTS,SIX_PARAMETERS))
+        OpsDrop.add_widget(test6Btn)
+        # addBtn = Button(text ='Add', size_hint_y = None, height = BUTTON_HEIGHT)
+        # addBtn.bind(on_release = lambda none: self.click.assign_block('Add',TWO_INPUTS,ONE_OUTPUT))
+        # OpsDrop.add_widget(addBtn)
+
+        # subBtn = Button(text ='Subtract', size_hint_y = None, height = BUTTON_HEIGHT)
+        # subBtn.bind(on_release = lambda none: self.click.assign_block('Subtract',TWO_INPUTS,ONE_OUTPUT))
+        # OpsDrop.add_widget(subBtn)
+
+        # multBtn = Button(text ='Multiply', size_hint_y = None, height = BUTTON_HEIGHT)
+        # multBtn.bind(on_release = lambda none: self.click.assign_block('Multiply',TWO_INPUTS,ONE_OUTPUT))
+        # OpsDrop.add_widget(multBtn)
+
+        # divBtn = Button(text ='Divide', size_hint_y = None, height = BUTTON_HEIGHT)
+        # divBtn.bind(on_release = lambda none: self.click.assign_block('Divide',TWO_INPUTS,ONE_OUTPUT))
+        # OpsDrop.add_widget(divBtn)
         
-        # Through-Zero Flanger
-        zeroFlangerBtn = Button(text ='Through-Zero Flanger', size_hint_y = None, height = BUTTON_HEIGHT)
-        zeroFlangerBtn.bind(on_release = lambda none: self.click.assign_block('Thru0 Flanger',1,1,5,0,0,1))
-        FXdrop.add_widget(zeroFlangerBtn)
-
-        # Tremelo
-        # tremoloBtn = Button(text ='Tremelo', size_hint_y = None, height = BUTTON_HEIGHT)
-        # tremoloBtn.bind(on_release = lambda none: self.click.assign_block('Tremelo',1,1,3))
-        # FXdrop.add_widget(tremoloBtn)
-
-        # Delay
-        delayBtn = Button(text ='Delay', size_hint_y = None, height = BUTTON_HEIGHT)
-        delayBtn.bind(on_release = lambda none: self.click.assign_block('Delay',1,1,3,2,2,1))
-        FXdrop.add_widget(delayBtn)
-
-        #Distortion
-        distBtn = Button(text ='Distortion', size_hint_y = None, height = BUTTON_HEIGHT)
-        distBtn.bind(on_release = lambda none: self.click.assign_block('Distortion',1,1,4))
-        FXdrop.add_widget(distBtn)
-
-        #Pitch Shift
-        pitchBtn = Button(text ='Pitch Shifter', size_hint_y = None, height = BUTTON_HEIGHT)
-        pitchBtn.bind(on_release = lambda none: self.click.assign_block('Pitch',1,1,3))
-        FXdrop.add_widget(pitchBtn)
-
-        # Looper
-        # looperBtn = Button(text ='Looper', size_hint_y = None, height = BUTTON_HEIGHT)
-        # looperBtn.bind(on_release = lambda none: self.click.assign_block('Looper',1,1,2))
-        # FXdrop.add_widget(looperBtn)
-        
-        # Test
-        testBtn = Button(text ='Test', size_hint_y = None, height = BUTTON_HEIGHT)
-        testBtn.bind(on_release = lambda none: self.click.assign_block('Test',1,1,6,2,5,1))
-        FXdrop.add_widget(testBtn)
-
-        #--------------------------------AnalysisDrop
-        AnalysisDrop = DropDown()
-
-        envelopeFollowerBtn = Button(text ='Envelope Follower', size_hint_y = None, height = BUTTON_HEIGHT)
-        envelopeFollowerBtn.bind(on_release = lambda  none: self.click.assign_block('Envelope',1,1))
-        AnalysisDrop.add_widget(envelopeFollowerBtn)
-        
-        #--------------------------------ControlsDrop
-        ControlsDrop = DropDown()
-        # 
-        PotentiomenterBtn = Button(text ='Potentiometer', size_hint_y = None, height = BUTTON_HEIGHT)
-        PotentiomenterBtn.bind(on_release = lambda  none: self.click.assign_block('Pot'))
-        ControlsDrop.add_widget(PotentiomenterBtn)
-        #
-        ConstantBtn = Button(text ='Constant', size_hint_y = None, height = BUTTON_HEIGHT)
-        ConstantBtn.bind(on_release = lambda  none: self.click.assign_block('Constant'))
-        ControlsDrop.add_widget(ConstantBtn)
-        # 
-        TapTempoBtn = Button(text ='Tap Tempo', size_hint_y = None, height = BUTTON_HEIGHT)
-        TapTempoBtn.bind(on_release = lambda  none: self.click.assign_block('Tap Tempo'))
-        ControlsDrop.add_widget(TapTempoBtn)
-        # 
-        SwitchBtn = Button(text ='Switch', size_hint_y = None, height = BUTTON_HEIGHT)
-        SwitchBtn.bind(on_release = lambda  none: self.click.assign_block('Switch'))
-        ControlsDrop.add_widget(SwitchBtn)
-
-        #--------------------------------Routingdrop
+    
+        #--------------------------------Routing
         RoutingDrop = DropDown()
         
         # Splitter
-        splitterBtn = Button(text ='Splitter', size_hint_y = None, height = BUTTON_HEIGHT)
-        splitterBtn.bind(on_release = lambda none: self.click.assign_block('Splitter',1))
-        RoutingDrop.add_widget(splitterBtn)
-        
-        # Mixer
-        mixerBtn = Button(text ='Mixer', size_hint_y = None, height = BUTTON_HEIGHT)
-        mixerBtn.bind(on_release = lambda none: self.click.assign_block('Mixer',0,1))
-        RoutingDrop.add_widget(mixerBtn)
+        # splitterBtn = Button(text ='Splitter', size_hint_y = None, height = BUTTON_HEIGHT)
+        # splitterBtn.bind(on_release = lambda none: self.click.assign_block('Splitter',1))
+        # RoutingDrop.add_widget(splitterBtn)
+            #--------------------------------Controls Drop
+        ControlsDrop = DropDown()
 
-
-        #--------------------------------FlashDrop
-        FlashDrop = DropDown()
-        
-        zeroBtn = Button(text ='0', size_hint_y = None, height = BUTTON_HEIGHT)
-        zeroBtn.bind(on_release = lambda none: self.program_flash(0))
-        FlashDrop.add_widget(zeroBtn)
-        
-        oneBtn = Button(text ='1', size_hint_y = None, height = BUTTON_HEIGHT)
-        oneBtn.bind(on_release = lambda none: self.program_flash(1))
-        FlashDrop.add_widget(oneBtn)
-        
-        twoBtn = Button(text ='2', size_hint_y = None, height = BUTTON_HEIGHT)
-        twoBtn.bind(on_release = lambda none: self.program_flash(2))
-        FlashDrop.add_widget(twoBtn)
-
-        threeBtn = Button(text ='3', size_hint_y = None, height = BUTTON_HEIGHT)
-        threeBtn.bind(on_release = lambda none: self.program_flash(3))
-        FlashDrop.add_widget(threeBtn)
-
-        fourBtn = Button(text ='4', size_hint_y = None, height = BUTTON_HEIGHT)
-        fourBtn.bind(on_release = lambda none: self.program_flash(4))
-        FlashDrop.add_widget(fourBtn)
-        
-        fiveBtn = Button(text ='5', size_hint_y = None, height = BUTTON_HEIGHT)
-        fiveBtn.bind(on_release = lambda none: self.program_flash(5))
-        FlashDrop.add_widget(fiveBtn)
-        
-        sixBtn = Button(text ='6', size_hint_y = None, height = BUTTON_HEIGHT)
-        sixBtn.bind(on_release = lambda none: self.program_flash(6))
-        FlashDrop.add_widget(sixBtn)
-        
-        sevenBtn = Button(text ='7', size_hint_y = None, height = BUTTON_HEIGHT)
-        sevenBtn.bind(on_release = lambda none: self.program_flash(7))
-        FlashDrop.add_widget(sevenBtn)
-        
-        eightBtn = Button(text ='8', size_hint_y = None, height = BUTTON_HEIGHT)
-        eightBtn.bind(on_release = lambda none: self.program_flash(8))
-        FlashDrop.add_widget(eightBtn)
-        
-        nineBtn = Button(text ='9', size_hint_y = None, height = BUTTON_HEIGHT)
-        nineBtn.bind(on_release = lambda none: self.program_flash(9))
-        FlashDrop.add_widget(nineBtn)
-        
-        tenBtn = Button(text ='10', size_hint_y = None, height = BUTTON_HEIGHT)
-        tenBtn.bind(on_release = lambda none: self.program_flash(10))
-        FlashDrop.add_widget(tenBtn)
-        
-        elevenBtn = Button(text ='11', size_hint_y = None, height = BUTTON_HEIGHT)
-        elevenBtn.bind(on_release = lambda none: self.program_flash(11))
-        FlashDrop.add_widget(elevenBtn)
-        
-        twelveBtn = Button(text ='12', size_hint_y = None, height = BUTTON_HEIGHT)
-        twelveBtn.bind(on_release = lambda none: self.program_flash(12))
-        FlashDrop.add_widget(twelveBtn)
-        
-        thirteenBtn = Button(text ='13', size_hint_y = None, height = BUTTON_HEIGHT)
-        thirteenBtn.bind(on_release = lambda none: self.program_flash(13))
-        FlashDrop.add_widget(thirteenBtn)
-        
-        fourteenBtn = Button(text ='14', size_hint_y = None, height = BUTTON_HEIGHT)
-        fourteenBtn.bind(on_release = lambda none: self.program_flash(14))
-        FlashDrop.add_widget(fourteenBtn)
-        
-        fifteenBtn = Button(text ='15', size_hint_y = None, height = BUTTON_HEIGHT)
-        fifteenBtn.bind(on_release = lambda none: self.program_flash(15))
-        FlashDrop.add_widget(fifteenBtn)
+        # ConstantBtn = Button(text ='Constant', size_hint_y = None, height = BUTTON_HEIGHT)
+        # ConstantBtn.bind(on_release = lambda  none: self.click.assign_block('Constant'))
+        # ControlsDrop.add_widget(ConstantBtn)
+        # 
 
         #-------------------------------- Buttons For Dropdowns
         IObutton = Button(text ='IO')
         IObutton.bind(on_release = IOdrop.open)
 
-        FXbutton = Button(text ='FX')
-        FXbutton.bind(on_release = FXdrop.open)
-
-        ControlsButton = Button(text ='Controls')
-        ControlsButton.bind(on_release = ControlsDrop.open)
+        OpsButton = Button(text ='Ops')
+        OpsButton.bind(on_release = OpsDrop.open)
 
         RoutingButton = Button(text ='Routing')
         RoutingButton.bind(on_release = RoutingDrop.open)
 
+        ControlsButton = Button(text ='Controls')
+        ControlsButton.bind(on_release = ControlsDrop.open)
+
         #--------------------------------
         CodeButton = Button(text ='Generate Code')
-        CodeButton.bind(on_release =  lambda none: self.generate_asm())
+        CodeButton.bind(on_release =  lambda none: self.generateCode())
 
         #--------------------------------
         ClearButton = Button(text ='Clear Screen')
@@ -269,7 +144,7 @@ class FXCoreDesignerApp(App):
 
         #---------------------------------------------
         self.layout.add_widget(IObutton)
-        self.layout.add_widget(FXbutton)
+        self.layout.add_widget(OpsButton)
         self.layout.add_widget(ControlsButton)
         self.layout.add_widget(RoutingButton)
         self.layout.add_widget(CodeButton)
@@ -286,23 +161,23 @@ class FXCoreDesignerApp(App):
             for block in blocks:
                     if block.selected == 1:
                         block.remove_block()# remove block/connector graphics
-                        for line in block.conLines:
+                        for line in block.lines:
                             line.remove_line()
-                            block.conLines.remove(line)
+                            block.lines.remove(line)
                         for block2 in blocks:
-                            for line in block2.conLines:
+                            for line in block2.lines:
                                 if line.start_block.name == block.name:
                                     line.remove_line()
-                                    block2.conLines.remove(line)
+                                    block2.lines.remove(line)
                                 elif line.end_block.name == block.name:
                                     line.remove_line()
-                                    block2.conLines.remove(line)
+                                    block2.lines.remove(line)
                         blocks.remove(block)
                     else:
-                        for line in block.conLines: # search for dragging lines
+                        for line in block.lines: # search for dragging lines
                             if line.dragging == DRAGGING:
                                 line.dragging = NOT_DRAGGING
-                                block.conLines.remove(line)
+                                block.lines.remove(line)
                                 line.remove_line()
         if args[3] == 'c':
             self.change_constant()    
@@ -353,8 +228,8 @@ class FXCoreDesignerApp(App):
                         self.hover = FALSE
                         self.popUpLabel.destroy_label()
 
-                if block.conLines != []:
-                    for conLine in block.conLines:
+                if block.lines != []:
+                    for conLine in block.lines:
                         if conLine.dragging == DRAGGING: # when first dragging the line keep hold of it until clicked in block or deleted
                             conLine.drag_line(mousepos,DRAG_MODE1)
 
@@ -384,452 +259,26 @@ class FXCoreDesignerApp(App):
         # global blocks
         #     for block in blocks:              
         #         block.remove_block( )# remove block/connector graphics
-        #         for line in block.conLines:
+        #         for line in block.lines:
         #             line.remove_line()
-        #             block.conLines.remove(line)
+        #             block.lines.remove(line)
         #         blocks.remove(block)            
         #     popup.dismiss()
-        
-    def program_flash(self,area):
-        print(area)
 
-
-    def error_trap(self,error):
-        box = BoxLayout(orientation = 'vertical', padding = (10))
-        btn1 = Button(text = "OK")   
-        box.add_widget(btn1)
-        if error == "out of reg":
-            popup = Popup(title="Too many registers used. Try using less mixers and splitters.", title_size= (30), 
-                    title_align = 'center', content = box,
-                    size_hint=(None, None), size=(400, 400),
-                    auto_dismiss = True)
-        btn1.bind(on_press = popup.dismiss) 
-        popup.open()
-
-    def get_free_register(self):
-        if self.registers_used["r1"] == 0:
-            print("r1!")
-            return 1
-        elif self.registers_used["r2"] == 0:
-            print("r2!")
-            return 2
-        elif self.registers_used["r3"] == 0:
-            print("r3!")
-            return 3
-        elif self.registers_used["r4"] == 0:
-            print("r4!")
-            return 4
-        elif self.registers_used["r5"] == 0:
-            print("r5!")
-            return 5
-        elif self.registers_used["r6"] == 0:
-            print("r6!")
-            return 6
-        elif self.registers_used["r7"] == 0:
-            print("r7!")
-            return 7     
-        elif self.registers_used["r8"] == 0:
-            print("r8!")
-            return 8      
-        elif self.registers_used["r9"] == 0:
-            print("r9!")
-            return 9
-        elif self.registers_used["r10"] == 0:
-            print("r10!")
-            return 10
-        elif self.registers_used["r11"] == 0:
-            print("r11!")
-            return 11
-        elif self.registers_used["r12"] == 0:
-            print("r12!")
-            return 12
-        elif self.registers_used["r13"] == 0:
-            print("r13!")
-            return 13
-        elif self.registers_used["r14"] == 0:
-            print("r14!")
-            return 14
-        # elif self.registers_used["r15"] == 0:
-        #     return 15
-        else:
-            self.error_trap("out of reg")
- 
-    def find_names(self, string):
-        names_dict = {}
-        start_index = 0
-        while True:
-            start_index = string.find('$', start_index)
-            if start_index == -1:
-                break
-            end_index = string.find('$', start_index + 1)
-            if end_index == -1:
-                break
-            name = string[start_index+1:end_index].split(' ')[0]
-            if name not in names_dict:
-                names_dict[name] = 1
-            start_index = end_index + 1
-        return names_dict
+    # def error_trap(self,error):
+    #     box = BoxLayout(orientation = 'vertical', padding = (10))
+    #     btn1 = Button(text = "OK")   
+    #     box.add_widget(btn1)
+    #     if error == "out of reg":
+    #         popup = Popup(title="Too many registers used. Try using less mixers and splitters.", title_size= (30), 
+    #                 title_align = 'center', content = box,
+    #                 size_hint=(None, None), size=(400, 400),
+    #                 auto_dismiss = True)
+    #     btn1.bind(on_press = popup.dismiss) 
+    #     popup.open()
     
-    def add_dicts(self, dict1, dict2):
-        for key in dict2.keys():
-            dict1[key] = dict1.get(key, 0) + dict2[key]
-        return dict1
-    
-    def replace_substrings(self, dict, string): # replace tagged names in asm and directive with name + name val
-        for k, v in dict.items():
-            k2 = '$' + k + '$'
-            string = string.replace(k2, k + str(v - 1)) # -1 to start from 0
-        return string
+    def generateCode():
+        pass
 
-    def modify_strings_and_registers(self,node):
-        node.add_controls_to_asm() # leaving the current node so add its controls
-        node.add_registers_to_asm()
-                    
-        # count occuraces of names so that unique names can be created with replace_substrings
-        dict = self.add_dicts(self.main_names_dict,self.find_names(node.asm_string))
-
-        self.asm_string += self.replace_substrings(dict,node.asm_string)
-        self.directive_string += self.replace_substrings(dict,node.directive_string)    
-
-        # clear registers 
-        for reg in range(1, 14): # loop through registers r1-r14
-            if self.registers_used["r"+str(reg)] == node.name: # if register is used by block
-                if "Mixer" in node.name:
-                    if node.usage_state == 1: # break if not finished using mixer yet
-                        break
-                    self.registers_used["r"+str(reg)] = 0 # free register
-
-    def remove_extra_equ(self,text):
-            lines = text.split('\n')
-            result = []
-            equ_found = set()
-            for line in lines:
-                if '.equ' in line:
-                    if line not in equ_found:
-                        result.append(line)
-                        equ_found.add(line)
-                else:
-                    result.append(line)
-            return '\n'.join(result)
-                        
-    def recursive_add_nodes(self,node,prev_node=0):
-        if prev_node == 0: # input block condition:
-            node.block.conLines.sort(key=lambda x: x.end_connector) # sort list by conline end connector so that control blocks come first
-            node.block.conLines.sort(key=lambda x: x.start_connector) # sort list again by conline start connector
-            for conline in node.block.conLines: # loop through block connector lines 
-                #*****************************************************************************
-                if conline.end_block.name != node.block.name: # if conline end isnt this block
-
-                    if 'Splitter' in node.block.name:
-                        if(conline.start_connector == SPLITTER + 1): # dont allow the first splitter path to be processed
-                            continue
-
-                    if "Mixer" in conline.end_block.name: # mixer block
-                        if conline.end_block.usageState == 0: # if this is the first time using this mixer
-                            conline.end_block.usageState = 1  # now set it as used
-                            
-                            self.modify_strings_and_registers(node) #leaving node so modify strings
-                            
-                            save_reg = self.get_free_register() # get the next free register
-                            self.registers_used["r"+str(save_reg)] = conline.end_block.name # set the free register as now used by this block
-                            new_node = asm_node(conline.end_block,self.registers_used,conline.end_block.usageState,save_reg,conline.end_connector) 
-                            self.asm_nodes.append(new_node)
-                            self.asm_string += new_node.asm_string
-                            break
-
-                        elif conline.end_block.usageState == 1: # this mixer has previously been used in another path
-                            conline.end_block.usageState = 2 # second path using this mixer
-                            
-                            self.modify_strings_and_registers(node) # leaving node so modify strings
-                            
-                            for reg in range(1, 14): # loop through registers r1-r14
-                                if self.registers_used["r"+str(reg)] == conline.end_block.name: # if register is used by block
-                                    new_node = asm_node(conline.end_block,self.registers_used,conline.end_block.usageState,reg,conline.end_connector) #use the register in the weighted sum with the current acc32, get another free register for storing temp values
-                                    self.asm_nodes.append(new_node)
-                                    conline.end_block.usageState = 3 
-                                    self.recursive_add_nodes(new_node,node)
-                                    
-                    elif "Splitter" in conline.end_block.name: # mixer block
-                        if conline.end_block.usageState == 0: # if this is the first time using this splitter
-                            conline.end_block.usageState = 1  # now set it as used
-                            
-                            self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                            save_reg = self.get_free_register() # get the next free register
-                            self.registers_used["r"+str(save_reg)] = conline.end_block.name # set the free register as now used by this block
-                            new_node = asm_node(conline.end_block,self.registers_used,conline.end_block.usageState,save_reg,conline.end_connector) 
-                            self.asm_nodes.append(new_node)
-                            self.recursive_add_nodes(new_node,node)
-                        else:
-                            continue   
-                                                       
-                    elif conline.end_connector != OUTPUT and conline.end_connector != SPLITTER + 1 and conline.end_connector != SPLITTER + 2: # dont go up a path
-                        self.modify_strings_and_registers(node) # leaving node so modify strings
-
-                        new_node = asm_node(conline.end_block,self.registers_used)
-                        self.asm_nodes.append(new_node)
-                        if "Output" not in new_node.block.name:
-                            self.recursive_add_nodes(new_node,node)
-                        else: # Output Block
-                            self.asm_string += new_node.asm_string
-                            break
-                        
-                #*****************************************************************************
-                elif conline.start_block.name != node.block.name: # if conline start isnt this block
-
-                    if 'Splitter' in node.block.name:
-                        if(conline.end_connector == SPLITTER + 1): # dont allow the first splitter path to be processed
-                            continue
-
-                    if "Mixer" in conline.start_block.name:
-                        if conline.start_block.usageState == 0: # if this is the first time using this mixer
-                            conline.start_block.usageState = 1  # now set it as used
-                            
-                            self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                            save_reg = self.get_free_register() # get the next free register
-                            self.registers_used["r"+str(save_reg)] = conline.start_block.name # set the free register as now used by this block
-                            new_node = asm_node(conline.start_block,self.registers_used,conline.start_block.usageState,conline.start_connector,save_reg)
-                            self.asm_nodes.append(new_node)
-                            self.asm_string += new_node.asm_string
-                            break
-
-                        elif conline.start_block.usageState == 1: # this mixer has previously been used in another path
-                            conline.start_block.usageState = 2 # second path using this mixer
-                            
-                            self.modify_strings_and_registers(node) # leaving node so modify strings
-
-                            for reg in range(1, 14): #loop through registers r1-r14
-                                if self.registers_used["r"+str(reg)] == conline.start_block.name: # if register is used by block
-                                    new_node = asm_node(conline.start_block,self.registers_used,conline.start_block.usageState,reg,conline.start_connector) #use the register in the weighted sum with the current acc32, get another free register for storing temp values
-                                    self.asm_nodes.append(new_node)
-                                    self.recursive_add_nodes(new_node,node)
-
-                    elif 'Splitter' in conline.start_block.name:
-                        if conline.start_block.usageState == 0: # first time using this splitter
-                            conline.start_block.usageState = 1  # now set it as used
-                            
-                            self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                            save_reg = self.get_free_register() # get the next free register
-                            self.registers_used["r"+str(save_reg)] = conline.start_block.name # set the free register as now used by this block
-                            new_node = asm_node(conline.start_block,self.registers_used,conline.start_block.usageState,save_reg,conline.start_connector)
-                            self.asm_nodes.append(new_node)
-                            self.recursive_add_nodes(new_node,node)
-                        else:
-                            continue
-
-                    elif conline.start_connector != OUTPUT and conline.start_connector != SPLITTER + 1 and conline.start_connector != SPLITTER + 2: # dont go up a path
-                        self.modify_strings_and_registers(node) # leaving node so modify strings
-
-                        new_node = asm_node(conline.start_block,self.registers_used)   
-                        self.asm_nodes.append(new_node) 
-                        if "Output" not in new_node.block.name:
-                            self.recursive_add_nodes(new_node,node)
-                        else:
-                            self.asm_string += new_node.asm_string
-                            break
-                        
-        #========================================================= current block is not an input block                    
-        else:
-            node.block.conLines.sort(key=lambda x: x.end_connector) # sort list by conline end connector so that control blocks come first
-            node.block.conLines.sort(key=lambda x: x.start_connector) # sort list again by conline start connector
-
-            for conline in node.block.conLines: # loop through block connector lines
-
-                #*****************************************************************************
-                if conline.start_block.name == node.block.name: # if a new line starts on the current iteration block
-                    if conline.end_block.name != prev_node.block.name: # dont add the previous block   
-
-                        if 'Splitter' in node.block.name:
-                            if(conline.start_connector == SPLITTER + 2): # dont allow the second splitter path to be processed
-                                continue
-
-                        if conline.end_connector == VAL_OUT: # pot or constant
-                            if "Constant" in conline.end_block.name:
-                                node.add_control(conline.start_connector,CONSTANT,conline.end_block.constant) 
-                            else:
-                                node.add_control(conline.start_connector,POT,conline.end_block.ID) 
-                        elif conline.end_connector == TAP_OUT:
-                            node.add_control(conline.start_connector,TAP_OUT) 
-                        elif conline.end_connector == SWITCH_OUT:
-                            node.add_control(conline.start_connector,SWITCH_OUT,conline.end_block.ID) 
-                        elif conline.end_connector == USER_BLOCK_IN:
-                            node.add_control(conline.start_connector,USER_BLOCK_IN,conline.end_block.ID)
-                                
-                        elif "Mixer" in conline.end_block.name: # mixer block
-                            if conline.end_block.usageState == 0: # if this is the first time using this mixer
-                                conline.end_block.usageState = 1  # now set it as used
-                                
-                                self.modify_strings_and_registers(node) # leaving node so modify strings
-
-                                save_reg = self.get_free_register() # get the next free register
-                                self.registers_used["r"+str(save_reg)] = conline.end_block.name # set the free register as now used by this block
-                                new_node = asm_node(conline.end_block,self.registers_used,conline.end_block.usageState,save_reg,conline.end_connector) 
-                                self.asm_nodes.append(new_node)
-                                self.asm_string += new_node.asm_string
-                                break
-
-                            elif conline.end_block.usageState == 1: # this mixer has previously been used in another path
-                                conline.end_block.usageState = 2 # second path using this mixer
-
-                                self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                                for reg in range(1, 14): # loop through registers r1-r14
-                                    if self.registers_used["r"+str(reg)] == conline.end_block.name: # if register is used by block
-                                        new_node = asm_node(conline.end_block,self.registers_used,conline.end_block.usageState,reg,conline.end_connector) #use the register in the weighted sum with the current acc32, get another free register for storing temp values
-                                        self.asm_nodes.append(new_node)    
-                                        self.recursive_add_nodes(new_node,node)
-
-                        elif "Splitter" in conline.end_block.name: # splitter block
-                            if conline.end_block.usageState == 0: # if this is the first time using this splitter
-                                conline.end_block.usageState = 1  # now set it as used
-                                
-                                self.modify_strings_and_registers(node) #leaving node so modify strings
-                                
-                                save_reg = self.get_free_register() # get the next free register
-                                self.registers_used["r"+str(save_reg)] = conline.end_block.name # set the free register as now used by this block
-                                new_node = asm_node(conline.end_block,self.registers_used,conline.end_block.usageState,save_reg,conline.end_connector) 
-                                self.asm_nodes.append(new_node)
-                                self.recursive_add_nodes(new_node,node)
-                            else:
-                                continue
-
-                        elif conline.end_connector != OUTPUT and conline.end_connector != SPLITTER + 1 and conline.end_connector != SPLITTER + 2: # dont go up a path
-                            self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                            new_node = asm_node(conline.end_block,self.registers_used)
-                            self.asm_nodes.append(new_node)
-                            if "Output" not in new_node.block.name:
-                                self.recursive_add_nodes(new_node,node)
-                            else:
-                                self.asm_string += new_node.asm_string
-                                break
-
-                #*****************************************************************************
-                elif conline.end_block.name == node.block.name: #if a new line ends on the current iteration block
-                    if conline.start_block.name != prev_node.block.name:#dont add the previous block
-
-                        if 'Splitter' in node.block.name:
-                            if(conline.end_connector == SPLITTER + 2):#dont allow the second splitter path to be processed
-                                break   
-                            
-                        if conline.start_connector == VAL_OUT: # pot or constant
-                            if "Constant" in conline.start_block.name:
-                                node.add_control(conline.end_connector,CONSTANT,conline.start_block.constant) 
-                            else:
-                                node.add_control(conline.end_connector,POT,conline.start_block.ID) 
-                        elif conline.start_connector == TAP_OUT:
-                            node.add_control(conline.end_connector,TAP_OUT) 
-                        elif conline.start_connector == SWITCH_OUT:
-                            node.add_control(conline.end_connector,SWITCH_OUT,conline.start_block.ID) 
-                        elif conline.start_connector == USER_BLOCK_IN:
-                            node.add_control(conline.end_connector,USER_BLOCK_IN,conline.start_block.ID)
-
-                        elif "Mixer" in conline.start_block.name:
-                            if conline.start_block.usageState == 0: # if this is the first time using this mixer
-                                conline.start_block.usageState = 1  # now set it as used
-                                
-                                self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                                save_reg = self.get_free_register() # get the next free register
-                                self.registers_used["r"+str(save_reg)] = conline.start_block.name # set the free register as now used by this block
-                                new_node = asm_node(conline.start_block,self.registers_used,conline.start_block.usageState,save_reg,conline.start_connector)
-                                self.asm_nodes.append(new_node)
-                                self.asm_string += new_node.asm_string
-                                break
-
-                            elif conline.start_block.usageState == 1: # this mixer has previously been used in another path
-                                conline.start_block.usageState = 2 # second path using this mixer
-                                
-                                self.modify_strings_and_registers(node) #leaving node so modify strings
-
-                                for reg in range(1, 14): #loop through registers r1-r14
-                                    if self.registers_used["r"+str(reg)] == conline.start_block.name: # if register is used by block
-                                        new_node = asm_node(conline.start_block,self.registers_used,conline.start_block.usageState,reg,conline.start_connector) #use the register in the weighted sum with the current acc32, get another free register for storing temp values
-                                        self.asm_nodes.append(new_node)
-                                        self.recursive_add_nodes(new_node,node)
-
-                        elif "Splitter" in conline.start_block.name:
-                            if conline.start_block.usageState == 0: # if this is the first time using this splitter
-                                conline.start_block.usageState = 1  # now set it as used
-
-                                self.modify_strings_and_registers(node) #leaving node so modify strings
-                                
-                                save_reg = self.get_free_register() # get the next free register
-                                self.registers_used["r"+str(save_reg)] = conline.start_block.name # set the free register as now used by this block
-                                new_node = asm_node(conline.start_block,self.registers_used,conline.start_block.usageState,save_reg,conline.start_connector)
-                                self.asm_nodes.append(new_node)
-                                self.recursive_add_nodes(new_node,node)
-                            else:
-                                continue
-
-                        elif conline.start_connector != OUTPUT and conline.start_connector != SPLITTER + 1 and conline.start_connector != SPLITTER + 2: #dont go up a path 
-                            
-                            self.modify_strings_and_registers(node) #leaving node so modify strings
-     
-                            new_node = asm_node(conline.start_block,self.registers_used)   
-                            self.asm_nodes.append(new_node)
-                            if "Output" not in new_node.block.name:
-                                self.recursive_add_nodes(new_node,node)
-                            else:
-                                self.asm_string += new_node.asm_string
-                                break
-
-    def generate_asm(self):
-        self.asm_nodes = []
-        self.asm_string = ""
-        self.directive_string = ""
-        self.main_names_dict = {}
-
-        self.registers_used["r1"] = 0
-        self.registers_used["r2"] = 0
-        self.registers_used["r3"] = 0
-        self.registers_used["r4"] = 0
-        self.registers_used["r5"] = 0
-        self.registers_used["r6"] = 0
-        self.registers_used["r7"] = 0
-        self.registers_used["r8"] = 0
-        self.registers_used["r9"] = 0
-        self.registers_used["r10"] = 0
-        self.registers_used["r11"] = 0
-        self.registers_used["r12"] = 0
-        self.registers_used["r13"] = 0
-        self.registers_used["r14"] = 0
-
-        for block in blocks:#loop through blocks until a start block is found
-            if block.conLines != []:
-                if 'Input' in block.name or 'Splitter' in block.name: # start building the graph from the input. TODO signal generators can start a graph too
-                    if 'Splitter' in block.name: #if a splitter it has to be used already to start a graph
-                        if block.usageState == 0:
-                            continue
-                        elif block.usageState == 1:
-                            block.usageState = 2
-                            for reg in range(1, 14): # loop through registers r1-r14
-                                if self.registers_used["r"+str(reg)] == block.name: # find register used by splitter previously
-                                    input_node = asm_node(block,self.registers_used,block.usageState,reg)
-                                    self.registers_used["r"+str(reg)] = 0
-                                    self.asm_nodes.append(input_node) # add input node to list
-                                    self.recursive_add_nodes(input_node) # start recursion  
-                    else:
-                        input_node = asm_node(block)    
-                        self.asm_nodes.append(input_node) # add input node to list
-                        self.recursive_add_nodes(input_node) # start recursion  
-
-        for block in blocks:
-            block.usageState = 0
-
-        for node in self.asm_nodes:
-            print(node.name)
-
-        self.directive_string = self.remove_extra_equ(self.directive_string)
-        final_string = self.directive_string + self.asm_string 
-        print(final_string)
-        
-        f = open("generated.fxc", 'w')
-        f.write(final_string)
-        f.close()    
-        # os.system('FXCoreCmdAsm.exe -h ')
-        
 if __name__ == '__main__':
-    FXCoreDesignerApp().run()
+    DSPDesignerApp().run()
